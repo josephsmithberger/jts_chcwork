@@ -1,0 +1,28 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/access-bridge-32.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/apcslib.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/BreezySwing.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/bsh-2.0b4.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/chndocs.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/chnutil.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/cldrdata.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/dnsns.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/jaccess.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/jfxrt.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/ldapsec.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/localedata.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/nashorn.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/sunec.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/sunjce_provider.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/sunmscapi.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/sunpkcs11.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/TerminalIO.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/TurtleGraphics.jar",
+        "/Users/josephsmithberger/Desktop/jwork/lib/zipfs.jar"
+    ],
+    "java.format.settings.url": ".vscode/java-formatter.xml"
+}
