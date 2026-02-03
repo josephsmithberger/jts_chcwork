@@ -1,0 +1,20 @@
+# Build output
+out/
+bin/
+target/
+
+# IDE
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.vscode/*.log
+
+# OS
+.DS_Store
+
+# Misc
+*.tmp
+*.swp
+*.swo
