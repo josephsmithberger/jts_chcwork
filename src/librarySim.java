@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-
+import java.util.Scanner;
 public class librarySim{
 	public static void main(String[] args){
-		book b = new book(813.6, "Allen Levi", "Theo of Golden", false);
-		System.out.println(b);
+		libraryMenu ui = new libraryMenu();
+		ui.start();
 	}
 }
 
@@ -157,7 +157,32 @@ class library{
 		return patrons;
 	}
 }
-
+class libraryMenu{
+	library myLib;
+	private Scanner input = new Scanner(System.in);
+	public libraryMenu(){
+		this(new library());
+	}
+	public libraryMenu(library nLib){
+		myLib = new library(nLib);
+	}
+	public void start(){
+		System.out.println("\nWelcome to " + myLib.getName() + " library! Choose from the following:");
+		boolean running = true;
+		while (running){
+			System.out.println("\n1. View books \n2. Add books \n3. Add patrons \n4. Check out book \n5. Return a book \n6. Exit");
+			int choice = input.nextInt();
+			switch (choice){
+				case 6:
+					System.out.println("See you later!");
+					running = false;
+				default:
+					System.out.println("Please enter a valid option from the provided list.");
+					break;
+			}
+		}
+	}
+}
 class utility{
 	public static <T> ArrayList<T> toArrayList(T[] arr){
 		ArrayList<T> list = new ArrayList<>();
