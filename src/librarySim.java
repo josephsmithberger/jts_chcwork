@@ -130,7 +130,32 @@ class library{
 		books = new ArrayList<>(myBooks);
 		patrons = new ArrayList<>(myPatrons);
 	}
-
+	//setters
+	public void setName(String nName){
+		name = nName;
+	}
+	public void setBooks(ArrayList<book> nBooks){
+		books = new ArrayList<>(nBooks);
+	}
+	public void setBooks(book[] nBooks){
+		books = utility.toArrayList(nBooks);
+	}
+	public void setPatrons(ArrayList<patron> nPatrons){
+		patrons = new ArrayList<>(nPatrons);
+	}
+	public void setPatrons(patron[] nPatrons){
+		patrons = utility.toArrayList(nPatrons);
+	}
+	//getters
+	public String getName(){
+		return name;
+	}
+	public ArrayList<book> getBooks(){
+		return books;
+	}
+	public ArrayList<patron> getPatrons(){
+		return patrons;
+	}
 }
 
 class utility{
