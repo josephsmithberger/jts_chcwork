@@ -102,7 +102,7 @@ class patron{
 	}
 	//toString
 	public String toString(){
-		return name + " | My books: " + utility.stringBooks(books);
+		return name + " | My books: " + utility.stringList(books);
 	}
 
 
@@ -166,18 +166,11 @@ class utility{
 		}
 		return list;
 	}
-	public static String stringBooks(ArrayList<book> myBooks){
-		String concatBook = "";
-		for (book myBook: myBooks){
-			concatBook += myBook.getTitle() + " ";
-		}
-		return concatBook;
-	}
-	public static String stringPatrons(ArrayList<patron> myPatrons){
-		String concatPatron = "";
-		for (patron myPatron: myPatrons){
-			concatPatron += myPatron.getName() + " ";
-		}
-		return concatPatron;
+	public static <T> String stringList(ArrayList<T> list) {
+	    String result = "";
+	    for (T item : list) {
+	        result += item + " ";
+	    }
+	    return result;
 	}
 }
