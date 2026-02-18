@@ -62,7 +62,13 @@ class book{
 	public String toString(){
 		return title + " by " + author + " | Is checked out: " + isCheckedOut + " | Call Number: " + String.format("%06.2f", callNumber);
 	}
-
+	//helper
+	public void checkOut(){
+		isCheckedOut = true;
+	}
+	public void returnBook(){
+		isCheckedOut = false;
+	}
 }
 class patron{
 	private String name;
@@ -102,10 +108,13 @@ class patron{
 	}
 	//toString
 	public String toString(){
-		return name + " | My books: " + utility.stringList(books);
+		return name + " | My books: " + utility.stringList(books, false);
 	}
-
-
+	//helpers
+	public void checkOutBook(book myBook){
+		myBook.checkOut();
+		books.add(myBook);
+	}
 }
 
 class library{
@@ -166,6 +175,44 @@ class libraryMenu{
 	public libraryMenu(library nLib){
 		myLib = new library(nLib);
 	}
+	public void checkOut(){
+		//get patron
+		patron patronChoice = null;
+		while (patronChoice == null){
+			System.out.println("For which patron");
+			ArrayList<patron> patronOptions = utility.findObjFromString(input.nextLine(), myLib.getPatrons());
+			System.out.println(utility.stringList(patronOptions, true));
+			int patronID = input.nextInt();
+			if ((patronID <= myLib.patrons.size())&&(patronID >= 0)){
+				patronChoice = myLib.patrons.get(patronID);
+			}
+			else if (patronID == myLib.patrons.size() + 1){
+				return;
+			}
+			else{
+				System.out.println("Invalid input. Please enter an integer in the list.");
+			}
+		}
+		//get book
+		book bookChoice = null;
+		while (bookChoice == null){
+			System.out.println("And for which book?");
+			ArrayList<book> bookOptions = utility.findObjFromString(input.nextLine(), myLib.getBooks());
+			System.out.println(utility.stringList(bookOptions, true));
+			int bookID = input.nextInt();
+			if ((bookID <= myLib.book.size())&&(bookID >= 0)){
+				bookChoice = myLib.books.get(bookID);
+				myLib.patrons.patronChoice.checkOut(myLib.books.bookChoice);
+			}
+			else if (bookID == myLib.books.size() + 1){
+				start();
+				return;
+			}
+			else{
+				System.out.println("Invalid input. Please enter an integer in the list.");
+			}
+		}
+	}
 	public void start(){
 		System.out.println("\nWelcome to " + myLib.getName() + " library! Choose from the following:");
 		boolean running = true;
@@ -173,9 +220,13 @@ class libraryMenu{
 			System.out.println("\n1. View books \n2. Add books \n3. Add patrons \n4. Check out book \n5. Return a book \n6. Exit");
 			int choice = input.nextInt();
 			switch (choice){
+				case 4:
+					checkOut();
+					break;
 				case 6:
 					System.out.println("See you later!");
 					running = false;
+					break;
 				default:
 					System.out.println("Please enter a valid option from the provided list.");
 					break;
@@ -184,18 +235,33 @@ class libraryMenu{
 	}
 }
 class utility{
-	public static <T> ArrayList<T> toArrayList(T[] arr){
-		ArrayList<T> list = new ArrayList<>();
-		for (int i = 0; i < arr.length; i++){
-			list.add(arr[i]);
+	public static <T> ArrayList<T> toArrayList(T[] list){
+		ArrayList<T> arr = new ArrayList<>();
+		for (int i = 0; i < list.length; i++){
+			arr.add(list[i]);
 		}
-		return list;
+		return arr;
 	}
-	public static <T> String stringList(ArrayList<T> list) {
+	public static <T> String stringList(ArrayList<T> list, boolean numbered) {
 	    String result = "";
+	    if (numbered){
+	    	result += "Choose from the following:\n";
+	    }
 	    for (T item : list) {
-	        result += item + " ";
+	        result += item + "\n";
+	    }
+	    if (numbered){
+	    	result += (list.size() + 1) + ". None of these";
 	    }
 	    return result;
+	}
+	public static <T> ArrayList<T> findObjFromString(String name, ArrayList<T> list){
+		ArrayList<T> arr = new ArrayList<>();
+		for (T item : list) {
+	        if (item.toString().contains(name)){
+	        	arr.add(item);
+	        }
+	    }
+	    return arr;
 	}
 }
