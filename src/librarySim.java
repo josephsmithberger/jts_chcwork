@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class librarySim{
 	public static void main(String[] args){
-		libraryMenu ui = new libraryMenu();
+		libraryMenu ui = new libraryMenu(utility.generate());
 		ui.start();
 	}
 }
@@ -173,45 +173,53 @@ class libraryMenu{
 		this(new library());
 	}
 	public libraryMenu(library nLib){
-		myLib = new library(nLib);
+		myLib = nLib;
 	}
 	public void checkOut(){
-		//get patron
-		patron patronChoice = null;
-		while (patronChoice == null){
-			System.out.println("For which patron");
-			ArrayList<patron> patronOptions = utility.findObjFromString(input.nextLine(), myLib.getPatrons());
-			System.out.println(utility.stringList(patronOptions, true));
-			int patronID = input.nextInt();
-			if ((patronID <= myLib.patrons.size())&&(patronID >= 0)){
-				patronChoice = myLib.patrons.get(patronID);
-			}
-			else if (patronID == myLib.patrons.size() + 1){
-				return;
-			}
-			else{
-				System.out.println("Invalid input. Please enter an integer in the list.");
-			}
-		}
-		//get book
-		book bookChoice = null;
-		while (bookChoice == null){
-			System.out.println("And for which book?");
-			ArrayList<book> bookOptions = utility.findObjFromString(input.nextLine(), myLib.getBooks());
-			System.out.println(utility.stringList(bookOptions, true));
-			int bookID = input.nextInt();
-			if ((bookID <= myLib.book.size())&&(bookID >= 0)){
-				bookChoice = myLib.books.get(bookID);
-				myLib.patrons.patronChoice.checkOut(myLib.books.bookChoice);
-			}
-			else if (bookID == myLib.books.size() + 1){
-				start();
-				return;
-			}
-			else{
-				System.out.println("Invalid input. Please enter an integer in the list.");
-			}
-		}
+		patron p = utility.selectFromList(input, "Search for Patron name:", myLib.getPatrons());
+	    if (p == null) return;
+
+	    book b = utility.selectFromList(input, "Search for Book title/author:", myLib.getBooks());
+	    if (b == null) return;
+
+	    if (b.getIsCheckedOut()) {
+	        System.out.println("Sorry, that book is already out.");
+	    } else {
+	        p.checkOutBook(b);
+	        System.out.println("Success! " + p.getName() + " took home " + b.getTitle());
+	    }
+	}
+	public void returnBook() {
+	    patron p = utility.selectFromList(input, "Who is returning a book?", myLib.getPatrons());
+	    if (p == null) return;
+
+	    book b = utility.selectFromList(input, "Which book is being returned?", p.getBooks());
+	    
+	    if (b != null) {
+	        b.returnBook();
+	        p.getBooks().remove(b);
+	        System.out.println("Book returned successfully.");
+	    }
+	}
+	public void addPatron(){
+		input.nextLine();
+		System.out.println("What's the patron's name?");
+		String name = input.nextLine();
+		patron newPatron = new patron(name, new book[0]);
+		myLib.getPatrons().add(newPatron);
+		System.out.println(name + " has been added a patron!");
+	}
+	public void addBook(){
+		input.nextLine();
+		System.out.println("What's the book's title?");
+		String title = input.nextLine();
+		System.out.println("What's the book's author?");
+		String author = input.nextLine();
+		System.out.println("What's the book's call number? (according to dewey decimal system)");
+		double callNumber = Double.parseDouble(input.nextLine());
+		book newBook = new book(callNumber, author, title, false);
+    	myLib.getBooks().add(newBook);
+		System.out.println(title + " has been added a book!");
 	}
 	public void start(){
 		System.out.println("\nWelcome to " + myLib.getName() + " library! Choose from the following:");
@@ -220,8 +228,20 @@ class libraryMenu{
 			System.out.println("\n1. View books \n2. Add books \n3. Add patrons \n4. Check out book \n5. Return a book \n6. Exit");
 			int choice = input.nextInt();
 			switch (choice){
+				case 1:
+					System.out.println(myLib.getBooks());
+					break;
+				case 2:
+					addBook();
+					break;
+				case 3:
+					addPatron();
+					break;
 				case 4:
 					checkOut();
+					break;
+				case 5:
+					returnBook();
 					break;
 				case 6:
 					System.out.println("See you later!");
@@ -247,9 +267,10 @@ class utility{
 	    if (numbered){
 	    	result += "Choose from the following:\n";
 	    }
-	    for (T item : list) {
-	        result += item + "\n";
-	    }
+		for (int i = 0; i < list.size(); i++) {
+		    T item = list.get(i);
+		    result += (i + 1) + ". " + item + "\n";
+		}
 	    if (numbered){
 	    	result += (list.size() + 1) + ". None of these";
 	    }
@@ -264,4 +285,45 @@ class utility{
 	    }
 	    return arr;
 	}
+	public static <T> T selectFromList(Scanner input, String prompt, ArrayList<T> fullList) {
+	    while (true) {
+	        System.out.println(prompt);
+	        String search = input.next();
+	        ArrayList<T> options = findObjFromString(search, fullList);
+	            
+	        System.out.println(utility.stringList(options, true));
+	        int choice = input.nextInt();
+
+	           
+	        if (choice > 0 && choice <= options.size()) {
+	            return options.get(choice - 1);
+	        } else if (choice == options.size() + 1) {
+	            return null;
+	    	}
+	    	System.out.println("Invalid selection. Try again.");
+	    }
+	}
+
+	//method for testing
+	public static library generate() {
+        // Create some books
+        book[] initialBooks = {
+            new book(823.91, "George Orwell", "1984", false),
+            new book(510.00, "Euclid", "The Elements", false),
+            new book(150.00, "Marcus Aurelius", "Meditations", false),
+            new book(813.54, "F. Scott Fitzgerald", "The Great Gatsby", false),
+            new book(612.00, "Alice Roberts", "The Complete Human Body", false),
+            new book(200.00, "Alan Watts", "The Way of Zen", false),
+            new book(940.53, "Antony Beevor", "The Second World War", false)
+        };
+
+        // Create some patrons
+        patron[] initialPatrons = {
+            new patron("Joseph", new book[0]),
+            new patron("Riordan", new book[0]),
+            new patron("Hailey", new book[0])
+        };
+
+        return new library("Cockeysville", initialBooks, initialPatrons);
+    }
 }
