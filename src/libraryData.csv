@@ -1,0 +1,7 @@
+COMMENT: The loadFromFile() method will skip this line because it is not 'BOOK' or 'PATRON'
+COMMENT: Make sure to put all of the books before the patrons, if you're writing this manually. 
+BOOK,823.91,George Orwell,1984,false
+BOOK,999, TEST, TEST, false
+BOOK,510.00,Euclid,The Elements,false
+PATRON,Joseph
+PATRON,Hailey

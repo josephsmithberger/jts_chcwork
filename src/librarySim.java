@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.*;
+
 public class librarySim{
 	public static void main(String[] args){
 		libraryMenu ui = new libraryMenu(utility.generate());
@@ -169,6 +171,7 @@ class library{
 class libraryMenu{
 	library myLib;
 	private Scanner input = new Scanner(System.in);
+	private Scanner fileInput;
 	public libraryMenu(){
 		this(new library());
 	}
@@ -221,11 +224,53 @@ class libraryMenu{
     	myLib.getBooks().add(newBook);
 		System.out.println(title + " has been added a book!");
 	}
+	// file input
+	public void setUpFile(){
+		input.nextLine();
+		while(true){
+			System.out.println("Please provide the path to your data, so I can populate the library.");
+			File myFile = new File(input.nextLine());
+			try{
+				fileInput = new Scanner(myFile);
+				break;
+			}
+			catch (FileNotFoundException e){
+				System.out.println("File not found, provide a working path");
+			}
+		}
+		loadFromFile();
+	}
+	public void loadFromFile(){
+		int i = 0;
+		while (fileInput.hasNext()){
+			i++;
+			String line = fileInput.nextLine();
+			String[] data = line.split(",");
+			switch (data[0]){
+				case "COMMENT":
+					break;
+				case "BOOK":
+					book newBook = new book(Double.parseDouble(data[1]), data[2], data[3], Boolean.parseBoolean(data[4]));
+					myLib.getBooks().add(newBook);
+					System.out.println("Line " + i + ": Added " + newBook);
+					break;
+				case "PATRON":
+					patron newPatron = new patron(data[1], new book[0]);
+    				myLib.getPatrons().add(newPatron);
+    				System.out.println("Line " + i + ": Added " + newPatron);
+					break;
+				default:
+					System.out.println("Line " + i + ": Unrecognized data type, skipping this line.");
+					break;
+			}
+		}
+		System.out.println("\nLibrary loaded from file!");
+	}
 	public void start(){
 		System.out.println("\nWelcome to " + myLib.getName() + " library! Choose from the following:");
 		boolean running = true;
 		while (running){
-			System.out.println("\n1. View books \n2. Add books \n3. Add patrons \n4. Check out book \n5. Return a book \n6. Exit");
+			System.out.println("\n1. View books \n2. Add books \n3. Add patrons \n4. Check out book \n5. Return a book \n6. Load from File \n7. Exit");
 			int choice = input.nextInt();
 			switch (choice){
 				case 1:
@@ -244,6 +289,9 @@ class libraryMenu{
 					returnBook();
 					break;
 				case 6:
+					setUpFile();
+					break;
+				case 7:
 					System.out.println("See you later!");
 					running = false;
 					break;
