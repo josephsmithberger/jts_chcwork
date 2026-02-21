@@ -114,6 +114,7 @@ class patron{
 	}
 	//helpers
 	public void checkOutBook(book myBook){
+		System.out.println(myBook.getTitle() + " was checked out by " + name);
 		myBook.checkOut();
 		books.add(myBook);
 	}
@@ -232,10 +233,16 @@ class libraryMenu{
 			File myFile = new File(input.nextLine());
 			try{
 				fileInput = new Scanner(myFile);
-				break;
 			}
 			catch (FileNotFoundException e){
 				System.out.println("File not found, provide a working path");
+			}
+			finally{
+				System.out.println("Loaded file..");
+				int fileExtPos = myFile.getName().lastIndexOf('.');
+				if(fileExtPos == -1){System.out.println("Please include the file extension.");}
+				if (myFile.getName().substring(fileExtPos).equals(".csv")){break;}
+				else{System.out.println("Invalid file type. CSV please!");}
 			}
 		}
 		loadFromFile();
@@ -250,13 +257,19 @@ class libraryMenu{
 				case "COMMENT":
 					break;
 				case "BOOK":
-					book newBook = new book(Double.parseDouble(data[1]), data[2], data[3], Boolean.parseBoolean(data[4]));
+					book newBook = new book(Double.parseDouble(data[1]), data[2], data[3], false);
 					myLib.getBooks().add(newBook);
 					System.out.println("Line " + i + ": Added " + newBook);
 					break;
 				case "PATRON":
 					patron newPatron = new patron(data[1], new book[0]);
     				myLib.getPatrons().add(newPatron);
+    				int j = 2;
+					while (j<data.length){
+						book bookCached = findBookFromString(data[j], myLib.getBooks());
+						if (bookCached != null){newPatron.checkOutBook(bookCached);}
+						j++;
+					}
     				System.out.println("Line " + i + ": Added " + newPatron);
 					break;
 				default:
@@ -265,6 +278,14 @@ class libraryMenu{
 			}
 		}
 		System.out.println("\nLibrary loaded from file!");
+	}
+	public book findBookFromString(String name, ArrayList<book> list){
+		for (book item : list) {
+	        if (item.getTitle().equalsIgnoreCase(name)){
+	        	return item;
+	        }
+	    }
+	    return null;
 	}
 	public void start(){
 		System.out.println("\nWelcome to " + myLib.getName() + " library! Choose from the following:");
