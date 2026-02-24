@@ -227,25 +227,32 @@ class libraryMenu{
 	}
 	// file input
 	public void setUpFile(){
-		input.nextLine();
-		while(true){
-			System.out.println("Please provide the path to your data, so I can populate the library.");
-			File myFile = new File(input.nextLine());
-			try{
-				fileInput = new Scanner(myFile);
-			}
-			catch (FileNotFoundException e){
-				System.out.println("File not found, provide a working path");
-			}
-			finally{
-				System.out.println("Loaded file..");
-				int fileExtPos = myFile.getName().lastIndexOf('.');
-				if(fileExtPos == -1){System.out.println("Please include the file extension.");}
-				if (myFile.getName().substring(fileExtPos).equals(".csv")){break;}
-				else{System.out.println("Invalid file type. CSV please!");}
-			}
-		}
-		loadFromFile();
+	    input.nextLine();
+	    while(true){
+	        System.out.println("Please provide the path to your data, so I can populate the library.");
+	        File myFile = new File(input.nextLine());
+
+	        int fileExtPos = myFile.getName().lastIndexOf('.');
+	        if (fileExtPos == -1) {
+	            System.out.println("Please include the file extension.");
+	            continue;
+	        }
+
+	        if (!myFile.getName().substring(fileExtPos).equals(".csv")) {
+	            System.out.println("Invalid file type. CSV please!");
+	            continue;
+	        }
+
+	        try{
+	            fileInput = new Scanner(myFile);
+	            System.out.println("Loaded file..");
+	            break;
+	        }
+	        catch (FileNotFoundException e){
+	            System.out.println("File not found, provide a working path");
+	        }
+	    }
+	    loadFromFile();
 	}
 	public void loadFromFile(){
 		int i = 0;
