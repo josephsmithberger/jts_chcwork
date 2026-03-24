@@ -30,6 +30,8 @@ abstract public class AbstractShape implements Shape {
    // and terminate with a semicolon. All subclasses must define these methods.
    
    abstract public double area();
+
+   abstract public double perimeter();
    
    abstract public void draw (Pen p);
    
