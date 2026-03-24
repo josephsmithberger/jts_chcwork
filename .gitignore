@@ -2,6 +2,7 @@
 out/
 bin/
 target/
+*.class
 
 # IDE
 .classpath
@@ -13,6 +14,9 @@ target/
 
 # OS
 .DS_Store
+
+# Legacy bundled dependencies from merged history
+ext/lib/*.jar
 
 # Misc
 *.tmp
